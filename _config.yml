@@ -1,0 +1,40 @@
+# Build settings
+gems:
+  - jemoji
+  - jekyll-paginate
+
+# Site settings
+title: "Amanda Sposito"
+description: > # this means to ignore newlines until "email:"
+   Prog, música e café. Praticante de muay thai na horas livres.
+   Não necessáriamente nessa ordem.
+email: "amandasposito@uol.com.br"
+
+#blog logo
+logo: "/assets/images/author.jpg"
+icon: "/assets/images/icon.png"
+
+# blog cover
+cover: "/assets/images/cover.jpg"
+
+name: 'Amanda Sposito'
+author: 'Amanda Sposito'
+author_image: "/assets/images/author.jpg"
+
+paginate:	5
+
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "http://amandasposito.com.br" # the base hostname & protocol for your site
+#used to display twitter cards
+twitter_handle: '@amsposito'
+
+#fill in disqus shortname to use disqus
+#disqus: disqus-shortname
+
+# social icons and sharing options
+social:
+  - icon:	twitter
+    url:	https://twitter.com/amsposito
+
+  - icon:	github
+    url:	https://github.com/amandasposito
