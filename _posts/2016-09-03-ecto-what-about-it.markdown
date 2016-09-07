@@ -7,6 +7,7 @@ categories:
   - database
   - ecto
 ---
+
 If you are studying Elixir and thought about how to connect with the database, you’ve probably heard of it.
 
 From it’s github page: “Ecto is a domain specific language for writing queries and interacting with databases in Elixir.”
@@ -40,7 +41,7 @@ It maps the source data into a Elixir structure. You define it once and can use 
 
 In Ecto's first version, it was called Model, but in favor of a more data focused mindset, they changed it.
 
-```
+{% highlight elixir %}
 defmodule Course do
   use Ecto.Schema
 
@@ -53,7 +54,7 @@ defmodule Course do
     timestamps()
   end
 end
-```
+{% endhighlight %}
 
 One thing that is important to be said, is that you don’t always need a schema to perform queries. You may want to do something that doesn’t necessary needs a pre-defined structure, for example, a report query.
 
@@ -65,13 +66,13 @@ Also, you can create different schemas depending on what you want to do. For exa
 
 This one caused me a lot of trouble at the beginning. I couldn’t figure it out why did I need it in the first place. I came from a OOP background and when I want to validate something, the errors are stored in the object.
 
-![mindblown](/assets/images/mindblown.gif)
+![](/assets/images/mindblown.gif)
 
 Once again, there is no objects in Elixir, and then you can’t store validation data into the object. So that is what Changeset it is about, it is a guarantee that we wont insert incorrect data into the database. Think about it as a collection of changes.
 
 > Changesets allow filtering, casting, validation and definition of constraints when manipulating structs.
 
-```
+{% highlight elixir %}
 def changeset(user, params \\ %{}) do
   user
   |> cast(params, [:name, :email, :age])
@@ -80,9 +81,9 @@ def changeset(user, params \\ %{}) do
   |> validate_inclusion(:age, 18..100)
   |> unique_constraint(:email)
 end
-```
+{% endhighlight %}
 
-![ecto-changset-validation-error](/assets/images/ecto-changset-validation-error.png)
+![Here is an example when I try to insert a data that breaks the changset validation.](/assets/images/ecto-changset-validation-error.png)
 
 [https://hexdocs.pm/ecto/Ecto.Changeset.html](https://hexdocs.pm/ecto/Ecto.Changeset.html)
 
@@ -90,20 +91,20 @@ end
 
 Written in Elixir syntax, they generate a SQL instruction, to retrieve information through the repo. The queries are sanitized and **protected from SQL Injection**.
 
-```
+{% highlight elixir %}
 (from c in Course,
  select: c)
-```
+{% endhighlight %}
 
 Also, the queries are **composable**, you can continue to use a query in another part of the code if you want to.
 
-```
+{% highlight elixir %}
 # Create a query
 query = from u in User, where: u.age > 18
 
 # Extend the query
 query = from u in query, select: u.name
-```
+{% endhighlight %}
 
 One thing that is important to be said, it is that Ecto is **not lazy load** and it is designed to be this way to avoid N+1 problems.
 
@@ -115,32 +116,32 @@ So, if you want to bring together the association data, you need to tell the que
 
 In the example bellow, we are telling the query to bring the class association together. In this case it will perform two queries, one for fetching the courses and another one to fetch the classes.
 
-```
+{% highlight elixir %}
 (from c in Course,
  preload: [classes: class],
  select: c)
-```
+{% endhighlight %}
 
 But very often you want them to come in the same query. You can do this by adding this join to query. It will fetch the class records in a inner join.
 
-```
+{% highlight elixir %}
 (from c in Course,
 join: class in assoc(c, :classes),
 preload: [classes: class],
 select: c)
-```
+{% endhighlight %}
 
 You can use `left_join`, `right_join` and `full_join`; the inner join is the default.
 
 You can pass other queries to the preload. For example if you want to filter or customize how it will bring the results:
 
-```
+{% highlight elixir %}
 classes = (from klass in Class,
            order_by: klass.created_at)
 
 query = (from course in Course,
         preload: [classes: ^classes])
-```
+{% endhighlight %}
 
 In the example above, it will fetch two queries, one for the courses and another one to bring the associated classes ordered by the creation date.
 
@@ -150,4 +151,4 @@ There was a lot of good changes in the second version, and it is a good ideia to
 
 Hope it helps.
 
-![thats-all-folks](/assets/images/thats-all-folks.gif)
+![](/assets/images/thats-all-folks.gif)

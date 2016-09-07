@@ -27,9 +27,9 @@ Este comando será responsável por criar uma aplicação com a estrutura de pas
 
 Para iniciarmos a aplicação basta digitar no terminal:
 
-```
+{% highlight bash %}
 $ mix phoenix.server
-```
+{% endhighlight %}
 
 Ela irá iniciar na porta 4000 e o resultado deverá ser assim:
 
@@ -41,13 +41,13 @@ Feito isso vamos começar a configurar o arquivo **app.js** para lidar com nosso
 
 A estrutura do arquivo é bem simples, a parte mais importante para nosso exemplo agora é importar o arquivo de Sockets. Ele será responsável pela nossa conexão.
 
-```
+{% highlight javascript %}
 import {Socket} from "deps/phoenix/web/static/js/phoenix"
-```
+{% endhighlight %}
 
 Feito isso, o arquivo esta divido em algumas funções. Para nos juntarmos ao channel, que iremos configurar mais adiante, iremos adicionar um trecho de código que conecta ao nosso channel no carregamento da página.
 
-```
+{% highlight javascript %}
 let socket = new Socket("/socket");
 
 socket.connect();
@@ -59,12 +59,12 @@ var channel = socket.channel("rooms:lobby", {});
 channel.join()
        .receive( "error", () => console.log("Failed to connect") )
        .receive( "ok", () => console.log("Connected") )
-```
+{% endhighlight %}
 
 O arquivo final ficará parecido com este:
 
-```
-import "deps/phoenix_html/web/static/js/phoenix_html"
+{% highlight javascript %}
+import "deps/phoenix\_html/web/static/js/phoenix_html"
 import {Socket} from "deps/phoenix/web/static/js/phoenix"
 
 class App {
@@ -119,13 +119,13 @@ class App {
 $( () => App.init() )
 
 export default App
-```
+{% endhighlight %}
 
 Certo, com o javascript pronto, vamos adicionar um channel. No arquivo que fica no caminho **web > channels > user_socket.ex** , iremos adicionar a seguinte linha de código:
 
-```
-channel “rooms:*”, DemoChat.RoomChannel
-```
+{% highlight elixir %}
+channel "rooms:*", DemoChat.RoomChannel
+{% endhighlight %}
 
 Essa linha é responsável por tratar qualquer mensagem que nós mandarmos que tenha o tópico **rooms:** , configurado no nosso javascript, através da variável **channel**.
 
@@ -139,26 +139,26 @@ Agora iremos criar o arquivo **room_channel.ex** em **web > channels**.
 
 Iremos adicionar uma função para nos conectarmos ao channel. Ela recebe o tópico, a mensagem e o socket; retornando o status de **:ok** para indicar sucesso na conexão.
 
-```
+{% highlight elixir %}
 def join("rooms:lobby", message, socket) do
   {:ok, socket}
 end
-```
+{% endhighlight %}
 
 E outra função que irá lidar com as mensagens que chegam ao servidor. Ele será responsável por realizar o broadcast da mensagem a todos os participantes.
 
-```
+{% highlight elixir %}
 def handle_in("new:message", msg, socket) do
   broadcast! socket, "new:message", %{user: msg["user"], body: msg["body"]}
   {:noreply, socket}
 end
-```
+{% endhighlight %}
 
 O javascript já está configurado para escutar a mensagem do broadcast:
 
-```
-channel.on( “new:message”, msg => this.renderMessage(msg) )
-```
+{% highlight javascript %}
+channel.on( "new:message", msg => this.renderMessage(msg) )
+{% endhighlight %}
 
 Após configurar a renderização da mensagem na tela, o chat está finalizado.
 
