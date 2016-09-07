@@ -6,6 +6,7 @@ categories:
   - rails engines
   - rspec
 ---
+
 Você decidiu usar Rails Engines na sua aplicação ou herdou um projeto que faz uso delas e você gostaria de entender como o fluxo funciona. O Rails guides possui uma introdução bem completa sobre o que são as tais das Engines [(http://guides.rubyonrails.org/engines.html)](http://guides.rubyonrails.org/engines.html)
 
 Dentre seus usos, a capacidade de isolar uma parte do sistema, encapsulando seu funcionamento, é uma característica que, quando bem utilizada, poderá ser um grande trunfo na evolução de seu sistema.
@@ -36,19 +37,38 @@ Nesse post, vamos usar o [RSpec](http://rspec.info/) como framework de testes. P
 
 Isso se dá porque, de acordo com [a documentação do Rails](http://guides.rubyonrails.org/engines.html#other-gem-dependencies), a engine pode ser adicionada como uma Gem futuramente e se as dependências estivessem no GemFile, elas poderiam não ser reconhecidas na hora da instalação, o que causaria bugs.
 
-{% gist https://gist.github.com/amandasposito/b181aa6509a00cfb9af6#file-core-gemspec %}
+```
+Gem::Specification.new do |s|
+  ...
+  s.add_dependency "rspec-rails", "~> 3.0"
+end
+```
 
 Feito isso, iremos executar o comando **bundle install** no terminal, dentro da pasta **core**.
 
 Na raiz da nossa aplicação, deve existir um arquivo no caminho lib/core/engine.rb. Iremos configurá-lo para incluir o RSpec.
 
-{% gist https://gist.github.com/amandasposito/16be9724ff87db2bddd3#file-engine-rb %}
+```
+module Core
+  class Engine < ::Rails::Engine
+    isolate_namespace Core
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
+  end
+end
+```
 
 E logo depois **rails generate rspec:install**, conforme a documentação do rspec, para criar o diretório **spec** (onde os testes irão ficar).
 
 No arquivo **spec/rails_helper.rb** iremos adicionar uma configuração para que nossos testes olhem para o arquivo de configuração da engine.
 
-{% gist https://gist.github.com/amandasposito/d389d0992891c4672691#file-spec_helper-rb %}
+```
+require "dummy_app/config/environment"
+
+...
+```
 
 Para testarmos nosso fluxo, podemos gerar um simples model:
 
@@ -60,13 +80,38 @@ $ bundle exec rake db:migrate RAILS_ENV=test
 
 Dentro da nossa dummy\_app de testes, vamos configurar as rotas em **spec/dummy_app/config/** para apontar para a raíz de nossa aplicacação.
 
-{% gist https://gist.github.com/amandasposito/1d5008ade337d530752d#file-routes-rb %}
+```
+Rails.application.routes.draw do
+  mount Core::Engine => "/"
+end
+```
 
 Apenas para validarmos o fluxo, vamos inserir duas regras de validação no nosso modelo:
 
-{% gist https://gist.github.com/amandasposito/707d8fb05dc4f331b634#file-article-rb %}
+```
+module Core
+  class Article < ActiveRecord::Base
+    validates :title, :text, presence: true
+  end
+end
+```
 
-{% gist https://gist.github.com/amandasposito/df17cc3d10a3a6418147#file-article_spec-rb %}
+```
+require 'rails_helper'
+
+module Core
+  RSpec.describe Article, type: :model do
+    it 'requires title' do
+      article = Article.create(title: nil)
+      expect(article.errors[:title].any?).to eq(true)
+    end
+    it 'requires text' do
+      article = Article.create(text: nil)
+      expect(article.errors[:text].any?).to eq(true)
+    end
+  end
+end
+```
 
 E então rodar nossos testes com **bundle exec rspec**
 

@@ -6,6 +6,7 @@ categories:
   - elixir
   - phoenix
 ---
+
 Há um tempo tenho estudado sobre Elixir e motivada pelo [Papo Reto da Bluesoft](http://youtube.com/bluesoftbr), resolvi escrever um post sobre como construir um chat simples utilizando Elixir e Phoenix.
 
 Para começarmos, primeiro devemos instalar o Elixir, no [site](http://elixir-lang.org/install.html) deles existem os passos que devemos seguir.
@@ -62,7 +63,63 @@ channel.join()
 
 O arquivo final ficará parecido com este:
 
-{% gist 32246a2e07e2c32fd03f %}
+```
+import "deps/phoenix_html/web/static/js/phoenix_html"
+import {Socket} from "deps/phoenix/web/static/js/phoenix"
+
+class App {
+  static init() {
+    var username = $("#username");
+      var msgBody  = $("#message");
+
+      //joins the channel
+      let socket = new Socket("/socket");
+      socket.connect();
+      socket.onClose( e => console.log("Closed connection") );
+
+      var channel = socket.channel("rooms:lobby", {});
+
+      //handle the responses
+      channel.join()
+             .receive( "error", () => console.log("Failed to connect") )
+             .receive( "ok",    () => console.log("Connected") )
+
+      msgBody.off("keypress")
+        .on("keypress", e => {
+          if (e.keyCode == 13) {
+
+            //pushes the message to the server
+            channel.push("new:message", {
+                    user: username.val(),
+                    body: msgBody.val()
+                  });
+
+            msgBody.val("");
+          }
+        });
+
+      //receiving broadcast messages
+      channel.on( "new:message", msg => this.renderMessage(msg) )
+  }
+
+  static renderMessage(msg) {
+    var messages = $("#messages")
+    var user = this.sanitize(msg.user || "New User")
+    var body = this.sanitize(msg.body)
+
+    //append the message to the page
+    messages.append(`<p><strong>[${user}]</strong>: ${body}</p>`)
+  }
+
+  static sanitize(str) {
+    return $("<div/>").text(str).html()
+  }
+}
+
+$( () => App.init() )
+
+export default App
+```
 
 Certo, com o javascript pronto, vamos adicionar um channel. No arquivo que fica no caminho **web > channels > user_socket.ex** , iremos adicionar a seguinte linha de código:
 
@@ -82,11 +139,20 @@ Agora iremos criar o arquivo **room_channel.ex** em **web > channels**.
 
 Iremos adicionar uma função para nos conectarmos ao channel. Ela recebe o tópico, a mensagem e o socket; retornando o status de **:ok** para indicar sucesso na conexão.
 
-{% gist https://gist.github.com/amandasposito/132dd1586f699f8ce3ea#file-join-ex %}
+```
+def join("rooms:lobby", message, socket) do
+  {:ok, socket}
+end
+```
 
 E outra função que irá lidar com as mensagens que chegam ao servidor. Ele será responsável por realizar o broadcast da mensagem a todos os participantes.
 
-{% gist https://gist.github.com/amandasposito/9a1b7182bb895398eb58#file-handle_in-ex %}
+```
+def handle_in("new:message", msg, socket) do
+  broadcast! socket, "new:message", %{user: msg["user"], body: msg["body"]}
+  {:noreply, socket}
+end
+```
 
 O javascript já está configurado para escutar a mensagem do broadcast:
 

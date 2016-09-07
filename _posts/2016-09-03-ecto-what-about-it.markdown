@@ -40,7 +40,20 @@ It maps the source data into a Elixir structure. You define it once and can use 
 
 In Ecto's first version, it was called Model, but in favor of a more data focused mindset, they changed it.
 
-{% gist d15213f63e89057646c01098ac7100f9 %}
+```
+defmodule Course do
+  use Ecto.Schema
+
+  schema "courses" do
+    field :name
+    field :description
+
+    has_many :classes, Class, on_delete: :delete_all
+
+    timestamps()
+  end
+end
+```
 
 One thing that is important to be said, is that you don’t always need a schema to perform queries. You may want to do something that doesn’t necessary needs a pre-defined structure, for example, a report query.
 
@@ -58,7 +71,16 @@ Once again, there is no objects in Elixir, and then you can’t store validation
 
 > Changesets allow filtering, casting, validation and definition of constraints when manipulating structs.
 
-{% gist https://gist.github.com/amandasposito/a52e61e6d4f9cbf55cfdc9cef1f7f1b1#file-changeset-ex %}
+```
+def changeset(user, params \\ %{}) do
+  user
+  |> cast(params, [:name, :email, :age])
+  |> validate_required([:name, :email])
+  |> validate_format(:email, ~r/@/)
+  |> validate_inclusion(:age, 18..100)
+  |> unique_constraint(:email)
+end
+```
 
 ![ecto-changset-validation-error](/assets/images/ecto-changset-validation-error.png)
 
@@ -68,11 +90,20 @@ Once again, there is no objects in Elixir, and then you can’t store validation
 
 Written in Elixir syntax, they generate a SQL instruction, to retrieve information through the repo. The queries are sanitized and **protected from SQL Injection**.
 
-{% gist https://gist.github.com/amandasposito/862636917da9ee7c4374908c1c45d159#file-simple_query-ex %}
+```
+(from c in Course,
+ select: c)
+ ```
 
 Also, the queries are **composable**, you can continue to use a query in another part of the code if you want to.
 
-{% gist https://gist.github.com/amandasposito/b427c446765800a750a4a7baa486ade0#file-composable-ex %}
+```
+# Create a query
+query = from u in User, where: u.age > 18
+
+# Extend the query
+query = from u in query, select: u.name
+```
 
 One thing that is important to be said, it is that Ecto is **not lazy load** and it is designed to be this way to avoid N+1 problems.
 
@@ -84,17 +115,32 @@ So, if you want to bring together the association data, you need to tell the que
 
 In the example bellow, we are telling the query to bring the class association together. In this case it will perform two queries, one for fetching the courses and another one to fetch the classes.
 
-{% gist https://gist.github.com/amandasposito/e38178bb9237348df9a71e8db809769b#file-query_preload-ex %}
+```
+(from c in Course,
+ preload: [classes: class],
+ select: c)
+ ```
 
 But very often you want them to come in the same query. You can do this by adding this join to query. It will fetch the class records in a inner join.
 
-{% gist https://gist.github.com/amandasposito/0a7b0eea6039d7524ee0f86a9f538ac3 %}
+```
+(from c in Course,
+join: class in assoc(c, :classes),
+preload: [classes: class],
+select: c)
+```
 
 You can use `left_join`, `right_join` and `full_join`; the inner join is the default.
 
 You can pass other queries to the preload. For example if you want to filter or customize how it will bring the results:
 
-{% gist https://gist.github.com/amandasposito/9eea6e729ee63ad3fae34d592e6668e1#file-preload_query-ex %}
+```
+classes = (from klass in Class,
+           order_by: klass.created_at)
+
+query = (from course in Course,
+        preload: [classes: ^classes])
+```
 
 In the example above, it will fetch two queries, one for the courses and another one to bring the associated classes ordered by the creation date.
 
