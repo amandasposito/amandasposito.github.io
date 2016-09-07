@@ -93,7 +93,7 @@ Written in Elixir syntax, they generate a SQL instruction, to retrieve informati
 ```
 (from c in Course,
  select: c)
- ```
+```
 
 Also, the queries are **composable**, you can continue to use a query in another part of the code if you want to.
 
@@ -119,7 +119,7 @@ In the example bellow, we are telling the query to bring the class association t
 (from c in Course,
  preload: [classes: class],
  select: c)
- ```
+```
 
 But very often you want them to come in the same query. You can do this by adding this join to query. It will fetch the class records in a inner join.
 
