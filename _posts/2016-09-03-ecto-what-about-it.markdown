@@ -98,10 +98,8 @@ Written in Elixir syntax, they generate a SQL instruction, to retrieve informati
 Also, the queries are **composable**, you can continue to use a query in another part of the code if you want to.
 
 ```
-# Create a query
 query = from u in User, where: u.age > 18
 
-# Extend the query
 query = from u in query, select: u.name
 ```
 
