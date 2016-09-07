@@ -11,7 +11,7 @@ Você decidiu usar Rails Engines na sua aplicação ou herdou um projeto que faz
 
 Dentre seus usos, a capacidade de isolar uma parte do sistema, encapsulando seu funcionamento, é uma característica que, quando bem utilizada, poderá ser um grande trunfo na evolução de seu sistema.
 
-É importante ressaltar que servem como módulos e deverão ser “plugados” na aplicação principal. Portanto, tome cuidado com a dependência de código. Tente levar sempre em consideração os princípios [SOLID](https://en.wikipedia.org/wiki/SOLID_%28object-oriented_design%29) para abstraçã0 do código.
+É importante ressaltar que servem como módulos e deverão ser “plugados” na aplicação principal. Portanto, tome cuidado com a dependência de código. Tente levar sempre em consideração os princípios [SOLID](https://en.wikipedia.org/wiki/SOLID_%28object-oriented_design%29) para abstração do código.
 
 Dito isto, vamos ao que interessa.
 
