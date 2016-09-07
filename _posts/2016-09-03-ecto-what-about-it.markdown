@@ -40,7 +40,7 @@ It maps the source data into a Elixir structure. You define it once and can use 
 
 In Ecto's first version, it was called Model, but in favor of a more data focused mindset, they changed it.
 
-{% gist https://gist.github.com/amandasposito/d15213f63e89057646c01098ac7100f9#file-schema-ex %}
+{% gist d15213f63e89057646c01098ac7100f9 %}
 
 One thing that is important to be said, is that you don’t always need a schema to perform queries. You may want to do something that doesn’t necessary needs a pre-defined structure, for example, a report query.
 
