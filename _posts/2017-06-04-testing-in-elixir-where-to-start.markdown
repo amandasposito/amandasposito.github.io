@@ -54,13 +54,13 @@ defmodule HelloWorldTest do
 end
 {% endhighlight %}
 
-RIght at the beginning we can see that there is a line  `use ExUnit.case`, **ExUnit.case** is a module that we should use in another modules so we can configure and prepare them to be tested.
+Right at the beginning we can see that there is a line  `use ExUnit.case`, **ExUnit.case** is a module that we should use in another modules so we can configure and prepare them to be tested.
 
-The test itself it is pretty simple and self-explained, but it already give us an idea of the structure we can use to write our tests.
+The test itself it is pretty simple and self-explained, but it already gives us an idea of the structure we can use to write our tests.
 
 ### Assertions
 
-There is some `asserts` that can help us to execute our tests. The most common being `assert` and `refute`.
+There are some `asserts` that can help us to execute our tests. The most common are `assert` and `refute`.
 
 `Assert` to compare something it is expected to be true and `refute` to compare something that is expect to be false.
 
@@ -91,7 +91,7 @@ There are a few more `asserts` that may help us and you can find them at the [Ex
 
 ### Describe
 
-To group our tests, there is a function called `describe` and It is a very used convention to organize the tests in a group of examples by function.
+To group our tests, there is a function called `describe` and it is a very used convention to organize the tests in a group of examples by function.
 
 {% highlight elixir %}
 describe "Some.Function" do
@@ -107,7 +107,7 @@ Using Mix, you can run only one block of `describe` if you want to:
 
 ### Test Setup
 
-In some cases, it may be necessary to do some kind of `setup` of the  `system under test` before run our tests. For this, there are two `macros` that can help us: `setup` and `setup_all`.
+In some cases, it may be necessary to do some kind of `setup` of the  `system under test` before run our tests. For this, there are two `macros` that can help us, the `setup` and `setup_all`.
 
 The difference between them is that `setup` is executed everytime before a test and `setup_all` is executed just one time before the `module` tests.
 
@@ -127,7 +127,7 @@ There are a few ways we can run our test suit, to run the whole test suit we can
 
 We can execute only one file, we just need to pass the file path to the command `$ mix test path/to/file.exs`.
 
-We can also execute only one test of the file, passing the test line as argument `$ mix test path/to/file.exs:line`
+And also, we can execute only one test of the file, passing the test line as argument `$ mix test path/to/file.exs:line`
 
 Besides these options, you can also use a `tag` to mark your test and use it, either to skip it or run only it, according to what you need.
 
@@ -160,15 +160,13 @@ ExUnit.start()
 
 So when we run our test suit, all the tests with the `wip` tag will be ignored.
 
-https://hexdocs.pm/mix/Mix.Tasks.Test.html
-
 ### Mocks and Stubs
 
 The truth is, if you're used to writing tests in your day-to-day life, there's a good chance you've used mocks and stubs to handle contracts or simulate behaviors.
 
 Some testing frameworks such as Ruby's `Minitest` or` RSpec` already come with options for mocks and stubs.
 
-`ExUnit`, however, does not come with anything for that, [in this post](http://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/) José Valim explains why the use of mocks can be harmful to the design of your application.
+`ExUnit`, however, does not come with anything for that, [in this post](http://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/) José Valim explains why the use of mocks can be harmful to the design of your application and how to avoid it in Elixir.
 
 In short terms, all Elixir applications come with standard configuration files and we can often use them to configure how a particular dependency will behave in different environments and use it in our tests, removing the need to use mock.
 
