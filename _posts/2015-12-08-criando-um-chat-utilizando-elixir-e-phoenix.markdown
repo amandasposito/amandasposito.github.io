@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Criando um chat utilizando Elixir e Phoenix"
+author: "Amanda Sposito"
 date:   2015-12-08 22:33:37 -0300
 categories:
   - elixir

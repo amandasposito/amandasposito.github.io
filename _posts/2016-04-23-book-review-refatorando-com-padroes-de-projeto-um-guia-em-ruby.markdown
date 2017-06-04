@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Book Review: Refatorando com padrões de projeto, um guia em Ruby"
+author: "Amanda Sposito"
 date:   2016-04-23 22:33:37 -0300
 categories:
   - design patterns

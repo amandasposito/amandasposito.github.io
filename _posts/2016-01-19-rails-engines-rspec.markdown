@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Rails Engines e RSpec"
+author: "Amanda Sposito"
 date:   2016-01-19 21:23:37 -0300
 categories:
   - rails engines

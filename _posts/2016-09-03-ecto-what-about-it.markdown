@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Ecto, what about it?"
+author: "Amanda Sposito"
 date:   2016-09-03 08:40:37 -0300
 categories:
   - elixir

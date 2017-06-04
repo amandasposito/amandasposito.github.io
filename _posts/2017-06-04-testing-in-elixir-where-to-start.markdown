@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Testing in Elixir, where to start?"
+author: "Amanda Sposito"
 date:   2017-06-04 16:17:37 -0300
 categories:
   - elixir
