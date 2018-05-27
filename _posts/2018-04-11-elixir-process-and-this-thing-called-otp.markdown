@@ -34,13 +34,13 @@ Each process has a *mailbox* that, as the name suggests, is responsible for rece
 
 One way to think about this is to imagine processes like cell phones that use SMSs to exchange information, as each cell phone has a place to store those messages until they are handled, and this happens in an independent and isolated manner.
 
-![sending-receiveing-messages](/images/elixir-process/sending-receiveing-messages.png)
+![sending-receiveing-messages](/assets/images/elixir-process/sending-receiveing-messages.png)
 
 It’s worth mentioning that we can also link a process to another. This is important because, based on this concept, we can identify faults and act to deal with them.
 
 When we have processes that monitor other processes, we name them *Supervisor*. We can have several of these in our application and when we have more than one Supervisor monitoring processes we call this a Supervision Tree.
 
-![supervision-tree](/images/elixir-process/supervision-tree.png)
+![supervision-tree](/assets/images/elixir-process/supervision-tree.png)
 
 This is very important as it enables us to provide fault tolerance, because when we have a problem with our code, the last thing we want is that it affects the end user. By monitoring processes, we can identify when something unexpected happens and work on it, terminating the process with an issue and restarting it, thus, the process returns to its initial state, giving us time to act and solve the issue that caused the error.
 
@@ -50,7 +50,7 @@ When BEAM starts, it also starts a thread named *Scheduler* that is responsible 
 
 To take full advantage of the hardware, BEAM starts a *Scheduler* for each available core, that is, a computer that has four cores will have four *schedulers*, each running several processes concurrently.
 
-![scheduler](/images/elixir-process/scheduler.png)
+![scheduler](/assets/images/elixir-process/scheduler.png)
 
 Processes are the foundation for the concurrency model we use in Elixir. Many of the features we need when using processes have some abstraction to help us, therefore, we don’t have to worry about the implementation details of more primitive functions such as spawn, send, and receive.
 

@@ -37,13 +37,13 @@ Cada processo possui uma *mailbox* que, como o nome sugere, é responsável por 
 
 Uma maneira de pensarmos nisso é imaginarmos processos como celulares que utilizam SMSs para troca de informações. Cada celular tem um local para armazenar essas mensagens até que elas sejam tratadas e isso acontece de maneira independente e isolada.
 
-![sending-receiveing-messages](/images/elixir-process/sending-receiveing-messages.png)
+![sending-receiveing-messages](/assets/images/elixir-process/sending-receiveing-messages.png)
 
 Vale mencionar também que podemos vincular um processo ao outro. Isso é importante  porque é com base nisso que podemos identificar falhas e tomar alguma ação para lidar com elas.
 
 Quando temos processos que monitoram outros processos, damos o nome de Supervisor. Podemos ter vários deles em nossa aplicação e quando temos mais de um *Supervisor* monitorando processos é o que chamamos de Árvore de Supervisão.
 
-![supervision-tree](/images/elixir-process/supervision-tree.png)
+![supervision-tree](/assets/images/elixir-process/supervision-tree.png)
 
 Isso é muito importante porque é através disso que obtemos a tolerância a falhas. Quando temos um problema com o nosso código, o que não queremos é que isso afete o usuário final. Através do monitoramento de processos podemos identificar quando algo inesperado acontece e assim tomar uma ação sobre isso, finalizando o processo com problema e iniciando-o novamente.  Assim, o processo volta ao seu estado inicial nos dando tempo para agir e resolver o problema que causou o erro.
 
@@ -53,7 +53,7 @@ Quando a BEAM inicia, ela também inicia uma thread chamada *Scheduler* que é r
 
 Para poder obter toda vantagem do hardware, a BEAM inicia um *Scheduler* para cada core disponível, ou seja, um computador que possui quatro cores, vai ter quatro *schedulers*, cada um rodando vários processos concorrentemente.
 
-![scheduler](/images/elixir-process/scheduler.png)
+![scheduler](/assets/images/elixir-process/scheduler.png)
 
 Processos são a base para o modelo de concorrência que usamos em Elixir. Muitas das funcionalidades que precisamos ao utilizá-los possuem alguma abstração para nos ajudar, portanto, dessa maneira não precisamos nos preocupar com os detalhes de implementação de funções mais primitivas, como *spawn, send e receive*.
 
