@@ -8,9 +8,9 @@ categories:
   - performance
 ---
 
-![Photo by Adam Jang on Unsplash](/assets/images/migrations-with-large-amount-of-data/cover.jpg)
-
 There is a discussion that always comes up when dealing with database migrations.
+
+![Photo by Adam Jang on Unsplash](/assets/images/migrations-with-large-amount-of-data/cover.jpg)
 
 Should I use the migrations to also migrate data? I mean, I've already altered the structure so it would be easy to change the data by including an SQL as well, and this would guarantee that everything is working after the deploy. Right?
 

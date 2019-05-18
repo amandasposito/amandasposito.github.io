@@ -8,9 +8,9 @@ categories:
   - phoenix
 ---
 
-![Photo by Mathyas Kurmann on Unsplash](/assets/images/criando-um-chat-elixir-phoenix-cover.jpg)
-
 Há um tempo tenho estudado sobre Elixir e motivada pelo [Papo Reto da Bluesoft](http://youtube.com/bluesoftbr), resolvi escrever um post sobre como construir um chat simples utilizando Elixir e Phoenix.
+
+![Photo by Mathyas Kurmann on Unsplash](/assets/images/criando-um-chat-elixir-phoenix-cover.jpg)
 
 Para começarmos, primeiro devemos instalar o Elixir, no [site](http://elixir-lang.org/install.html) deles existem os passos que devemos seguir.
 

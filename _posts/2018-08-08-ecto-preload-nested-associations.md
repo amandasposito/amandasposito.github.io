@@ -8,9 +8,9 @@ categories:
   - ecto
 ---
 
-![Photo by Mike Benna on Unsplash](/assets/images/ecto-preload-cover.jpg)
-
 This was `TIL` for me, so I thought it would be worth a quick post. 🙂
+
+![Photo by Mike Benna on Unsplash](/assets/images/ecto-preload-cover.jpg)
 
 **TL; DR;**
 

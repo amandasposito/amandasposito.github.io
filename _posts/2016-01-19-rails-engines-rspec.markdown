@@ -8,9 +8,9 @@ categories:
   - rspec
 ---
 
-![Photo by lee attwood on Unsplash](/assets/images/rails-engines-rspec-cover.jpg)
-
 Você decidiu usar Rails Engines na sua aplicação ou herdou um projeto que faz uso delas e você gostaria de entender como o fluxo funciona. O Rails guides possui uma introdução bem completa sobre o que são as tais das Engines [(http://guides.rubyonrails.org/engines.html)](http://guides.rubyonrails.org/engines.html)
+
+![Photo by lee attwood on Unsplash](/assets/images/rails-engines-rspec-cover.jpg)
 
 Dentre seus usos, a capacidade de isolar uma parte do sistema, encapsulando seu funcionamento, é uma característica que, quando bem utilizada, poderá ser um grande trunfo na evolução de seu sistema.
 

@@ -8,9 +8,9 @@ categories:
   - otp
 ---
 
-![Photo by Samuel Zeller on Unsplash](/assets/images/elixir-process/cover.jpg)
-
 One of the notable features provided by the Elixir language is the way it handles concurrency, and how this is beneficial on a daily basis and adds value to the final software. One of the things that comes up when learning about concurrency in Elixir is an acronym we hear a lot, called OTP.
+
+![Photo by Samuel Zeller on Unsplash](/assets/images/elixir-process/cover.jpg)
 
 ### OTP
 
