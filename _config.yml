@@ -6,9 +6,8 @@ plugins:
 # Site settings
 title: "Amanda Sposito"
 description: > # this means to ignore newlines until "email:"
-   Prog, música e café. Praticante de muay thai na horas livres.
-   Não necessáriamente nessa ordem.
-email: "amandasposito@uol.com.br"
+   Software Engineer at Plataformatec.
+email: "hello@amandasposito.com"
 
 #blog logo
 logo: "/assets/images/author.jpg"
