@@ -56,5 +56,5 @@ Hope it helps!
 
 **References:**
 
-https://hexdocs.pm/ecto/2.2.10/Ecto.Query.html#preload/3
-https://robots.thoughtbot.com/preloading-nested-associations-with-ecto
+* [https://hexdocs.pm/ecto/2.2.10/Ecto.Query.html#preload/3](https://hexdocs.pm/ecto/2.2.10/Ecto.Query.html#preload/3)
+* [https://robots.thoughtbot.com/preloading-nested-associations-with-ecto](https://robots.thoughtbot.com/preloading-nested-associations-with-ecto)
