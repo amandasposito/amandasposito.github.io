@@ -23,7 +23,7 @@ author_image: "/assets/images/author.jpg"
 paginate:	20
 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://amandasposito.com.br" # the base hostname & protocol for your site
+url: "http://amandasposito.com" # the base hostname & protocol for your site
 #used to display twitter cards
 twitter_handle: '@amsposito'
 
