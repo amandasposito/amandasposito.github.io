@@ -9,6 +9,8 @@ categories:
   - exunit
 ---
 
+![Photo by Erik Witsoe on Unsplash](/assets/images/testing-in-elixir-where-to-start-cover.jpg)
+
 After studying Elixir for a while and understanding how it works, I came across some questions about how writing tests would be in a functional language and where to start.
 
 ### ExUnit

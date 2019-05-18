@@ -9,6 +9,8 @@ categories:
   - ecto
 ---
 
+![](/assets/images/ecto-what-about-it-cover.jpg)
+
 If you are studying Elixir and thought about how to connect with the database, you’ve probably heard of it.
 
 From it’s github page: “Ecto is a domain specific language for writing queries and interacting with databases in Elixir.”

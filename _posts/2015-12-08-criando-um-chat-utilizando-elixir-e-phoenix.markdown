@@ -8,6 +8,8 @@ categories:
   - phoenix
 ---
 
+![Photo by Mathyas Kurmann on Unsplash](/assets/images/criando-um-chat-elixir-phoenix-cover.jpg)
+
 Há um tempo tenho estudado sobre Elixir e motivada pelo [Papo Reto da Bluesoft](http://youtube.com/bluesoftbr), resolvi escrever um post sobre como construir um chat simples utilizando Elixir e Phoenix.
 
 Para começarmos, primeiro devemos instalar o Elixir, no [site](http://elixir-lang.org/install.html) deles existem os passos que devemos seguir.
@@ -18,9 +20,9 @@ Para esse post, estou utilizando a versão 1.1.1 do Elixir e 1.0.4 do Phoenix.
 
 Depois que tudo estiver instalado, no terminal, iremos digitar o comando abaixo:
 
-{% highlight bash %}
+```bash
 $ mix phoenix.new demo_chat ~/projects
-{% endhighlight %}
+```
 
 Este comando será responsável por criar uma aplicação com a estrutura de pastas padrão com o nome de *"demo_chat"* dentro da pasta *"projects"*.
 
@@ -28,9 +30,9 @@ Este comando será responsável por criar uma aplicação com a estrutura de pas
 
 Para iniciarmos a aplicação basta digitar no terminal:
 
-{% highlight bash %}
+```bash
 $ mix phoenix.server
-{% endhighlight %}
+```
 
 Ela irá iniciar na porta 4000 e o resultado deverá ser assim:
 
@@ -42,13 +44,13 @@ Feito isso vamos começar a configurar o arquivo **app.js** para lidar com nosso
 
 A estrutura do arquivo é bem simples, a parte mais importante para nosso exemplo agora é importar o arquivo de Sockets. Ele será responsável pela nossa conexão.
 
-{% highlight javascript %}
+```javascript
 import {Socket} from "deps/phoenix/web/static/js/phoenix"
-{% endhighlight %}
+```
 
 Feito isso, o arquivo esta divido em algumas funções. Para nos juntarmos ao channel, que iremos configurar mais adiante, iremos adicionar um trecho de código que conecta ao nosso channel no carregamento da página.
 
-{% highlight javascript %}
+```javascript
 let socket = new Socket("/socket");
 
 socket.connect();
@@ -60,12 +62,12 @@ var channel = socket.channel("rooms:lobby", {});
 channel.join()
        .receive( "error", () => console.log("Failed to connect") )
        .receive( "ok", () => console.log("Connected") )
-{% endhighlight %}
+```
 
 O arquivo final ficará parecido com este:
 
-{% highlight javascript %}
-import "deps/phoenix\_html/web/static/js/phoenix_html"
+```javascript
+import "deps/phoenix/_html/web/static/js/phoenix_html"
 import {Socket} from "deps/phoenix/web/static/js/phoenix"
 
 class App {
@@ -120,13 +122,13 @@ class App {
 $( () => App.init() )
 
 export default App
-{% endhighlight %}
+```
 
 Certo, com o javascript pronto, vamos adicionar um channel. No arquivo que fica no caminho **web > channels > user_socket.ex** , iremos adicionar a seguinte linha de código:
 
-{% highlight elixir %}
+```elixir
 channel "rooms:*", DemoChat.RoomChannel
-{% endhighlight %}
+```
 
 Essa linha é responsável por tratar qualquer mensagem que nós mandarmos que tenha o tópico **rooms:** , configurado no nosso javascript, através da variável **channel**.
 
@@ -140,26 +142,26 @@ Agora iremos criar o arquivo **room_channel.ex** em **web > channels**.
 
 Iremos adicionar uma função para nos conectarmos ao channel. Ela recebe o tópico, a mensagem e o socket; retornando o status de **:ok** para indicar sucesso na conexão.
 
-{% highlight elixir %}
+```elixir
 def join("rooms:lobby", message, socket) do
   {:ok, socket}
 end
-{% endhighlight %}
+```
 
 E outra função que irá lidar com as mensagens que chegam ao servidor. Ele será responsável por realizar o broadcast da mensagem a todos os participantes.
 
-{% highlight elixir %}
+```elixir
 def handle_in("new:message", msg, socket) do
   broadcast! socket, "new:message", %{user: msg["user"], body: msg["body"]}
   {:noreply, socket}
 end
-{% endhighlight %}
+```
 
 O javascript já está configurado para escutar a mensagem do broadcast:
 
-{% highlight javascript %}
+```javascript
 channel.on( "new:message", msg => this.renderMessage(msg) )
-{% endhighlight %}
+```
 
 Após configurar a renderização da mensagem na tela, o chat está finalizado.
 
