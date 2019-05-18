@@ -109,7 +109,7 @@ You can also print some messages during the process to provide some feedback whi
 
 [PostgreSQL: Documentation: 9.2: Errors and Messages](https://www.postgresql.org/docs/9.6/plpgsql-errors-and-messages.html)
 
-```plsql
+```sql
 DO $$
 DECLARE
    row_count integer := 1;
@@ -148,7 +148,7 @@ END $$;
 
 Given us a message output will be like this until the script finishes:
 
-```
+```bash
 NOTICE:  200000000 items to be updated
 CONTEXT:  PL/pgSQL function inline_code_block line 12 at RAISE
 NOTICE:  -> 50000 records updated!
@@ -160,7 +160,9 @@ NOTICE:  -> 50001 records updated!
 
 After the script finishes, we can create an index in the new column since it will be used for reading purposes.
 
-`CREATE index ON "orders" ("user_account_id");`
+```sql
+CREATE index ON "orders" ("user_account_id");
+```
 
 If we ran the `EXPLAIN ANALYZE` command again we can see the performance improvements.
 
