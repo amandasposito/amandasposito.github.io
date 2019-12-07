@@ -28,7 +28,7 @@ Every database has its own characteristics, but most of the things you can do in
 
 ### Let’s take a look into one example
 
-Suppose we are dealing with e-commerce and we are noticing a slowness in the orders page, and by analyzing the query we notice an improvement can be done by denormalizing one of its tables.  Let’s work with some data to show how this could be done.
+Suppose we are dealing with e-commerce and we are noticing slowness in the orders page, and by analyzing the query we notice an improvement can be done by denormalizing one of its tables.  Let’s work with some data to show how this could be done.
 
 ```sql
 CREATE TABLE "users" (
