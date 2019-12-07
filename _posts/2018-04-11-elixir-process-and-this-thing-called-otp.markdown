@@ -8,7 +8,7 @@ categories:
   - otp
 ---
 
-One of the notable features provided by the Elixir language is the way it handles concurrency, and how this is beneficial on a daily basis and adds value to the final software. One of the things that comes up when learning about concurrency in Elixir is an acronym we hear a lot, called OTP.
+One of the notable features provided by the Elixir language is the way it handles concurrency, and how this is beneficial on a daily basis and adds value to the final software. One of the things that come up when learning about concurrency in Elixir is an acronym we hear a lot, called OTP.
 
 ![Photo by Samuel Zeller on Unsplash](/assets/images/elixir-process/cover.jpg)
 
@@ -26,11 +26,11 @@ When we talk about process in Elixir, we are referring to the Erlang virtual mac
 
 They are isolated from each other and communicate through messages, thus helping us divide the workload and run concurrent things.
 
-Elixir being a functional language, one of its features is immutability, which helps us to express explicit state. Hence, when we separate our code into independent tasks that can run concurrently, we don’t have to worry about controlling its state using complex mechanisms to ensure this, things like [mutex](https://en.wikipedia.org/wiki/Mutual_exclusion) and [threads](https://en.wikipedia.org/wiki/Thread_(computing)) usage are no longer needed.
+Elixir being a functional language, one of its features is immutability, which helps us to express an explicit state. Hence, when we separate our code into independent tasks that can run concurrently, we don’t have to worry about controlling its state using complex mechanisms to ensure this, things like [mutex](https://en.wikipedia.org/wiki/Mutual_exclusion) and [threads](https://en.wikipedia.org/wiki/Thread_(computing)) usage are no longer needed.
 
 ### How do processes work in Elixir?
 
-It is very common to associate processes and the message exchange between them with the [actor model for concurrency](https://en.wikipedia.org/wiki/Actor_model). This happens because each process in Elixir is independent and completely isolated from one another. A process can save state, but this is not shared, and the only way to share something among processes is by sending messages.
+It is very common to associate processes and the message exchange between them with the [actor model for concurrency](https://en.wikipedia.org/wiki/Actor_model). This happens because each process in Elixir is independent and completely isolated from one another. A process can save states, but this is not shared, and the only way to share something among processes is by sending messages.
 
 Each process has a *mailbox* that, as the name suggests, is responsible for receiving messages from other processes. It is also worth mentioning that when we send a message, everything happens asynchronously, so we don’t block processing waiting for a response.
 
@@ -44,7 +44,7 @@ When we have processes that monitor other processes, we name them *Supervisor*. 
 
 ![supervision-tree](/assets/images/elixir-process/supervision-tree.png)
 
-This is very important as it enables us to provide fault tolerance, because when we have a problem with our code, the last thing we want is that it affects the end user. By monitoring processes, we can identify when something unexpected happens and work on it, terminating the process with an issue and restarting it, thus, the process returns to its initial state, giving us time to act and solve the issue that caused the error.
+This is very important as it enables us to provide fault tolerance because when we have a problem with our code, the last thing we want is that it affects the end-user. By monitoring processes, we can identify when something unexpected happens and work on it, terminating the process with an issue and restarting it, thus, the process returns to its initial state, giving us time to act and solve the issue that caused the error.
 
 ### How does this work for concurrency?
 
