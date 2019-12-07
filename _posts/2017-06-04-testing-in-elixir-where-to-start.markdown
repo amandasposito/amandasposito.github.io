@@ -17,7 +17,7 @@ After studying Elixir for a while and understanding how it works, I came across 
 
 To begin with, Elixir comes with ExUnit, a test framework that provides pretty much everything we need to test our code.
 
-### How to use it ?
+### How to use it?
 
 Everytime we start a project with `mix new project_name` we can see the tests folder in its output:
 
@@ -43,7 +43,7 @@ You can use "mix" to compile it, test it, and more:
 Run "mix help" for more commands.
 {% endhighlight %}
 
-If we open the  `hello_world_test.exs` file, we will find our tests basic structure.
+If we open the  `hello_world_test.exs` file, we will find our test's basic structure.
 
 {% highlight elixir %}
 defmodule HelloWorldTest do
@@ -56,15 +56,15 @@ defmodule HelloWorldTest do
 end
 {% endhighlight %}
 
-Right at the beginning we can see that there is a line  `use ExUnit.case`, **ExUnit.case** is a module that we should use in another modules so we can configure and prepare them to be tested.
+Right at the beginning, we can see that there is a line  `use ExUnit.case`, **ExUnit.case** is a module that we should use in other modules so we can configure and prepare them to be tested.
 
-The test itself it is pretty simple and self-explained, but it already gives us an idea of the structure we can use to write our tests.
+The test itself is pretty simple and self-explained, but it already gives us an idea of the structure we can use to write our tests.
 
 ### Assertions
 
-There are some `asserts` that can help us to execute our tests. The most common are `assert` and `refute`.
+There are some `asserts` that can help us to execute our tests. The most common is `assert` and `refute`.
 
-`Assert` to compare something it is expected to be true and `refute` to compare something that is expect to be false.
+`Assert` to compare something it is expected to be true and `refute` to compare something that is expected to be false.
 
 | Assertion | Examples |
 |-------|--------|
@@ -77,19 +77,19 @@ There are some `asserts` that can help us to execute our tests. The most common 
 | `refute_in_delta` | `refute_in_delta 3.141, 3.142, 0.001` |
 
 
-The `asserts` are pretty much similar to most framework tests, the hightlight here is for `assert_receive` and`assert_received`.
+The `asserts` are pretty much similar to most framework tests, the highlight here is for `assert_receive` and`assert_received`.
 
-They help us to test async code, for example, you have a `Task` that executes some code and you wishe to monitor the  process and wait for some message. In this scenario, `assert_receive` would help us to test that we received the message.
+They help us to test async code, for example, you have a `Task` that executes some code and you wish to monitor the process and wait for some message. In this scenario, `assert_receive` would help us to test that we received the message.
 
 {% highlight elixir %}
 task = Task.async(fn -> "foo" end)
 ref  = Process.monitor(task.pid)
-assert_receive 	{:DOWN, ^ref, :process, _, :normal}, 500
+assert_receive     {:DOWN, ^ref, :process, _, :normal}, 500
 {% endhighlight %}
 
 In the above test, we are asserting that the Task exit is `:normal` and that it executed in up to 500 milliseconds.
 
-There are a few more `asserts` that may help us and you can find them at the [ExUnit oficial documentation](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html).
+There are a few more `asserts` that may help us and you can find them at the [ExUnit official documentation](https://hexdocs.pm/ex_unit/ExUnit.Assertions.html).
 
 ### Describe
 
@@ -109,9 +109,9 @@ Using Mix, you can run only one block of `describe` if you want to:
 
 ### Test Setup
 
-In some cases, it may be necessary to do some kind of `setup` of the  `system under test` before run our tests. For this, there are two `macros` that can help us, the `setup` and `setup_all`.
+In some cases, it may be necessary to do some kind of `setup` of the  `system under test` before running our tests. For this, there are two `macros` that can help us, the `setup` and `setup_all`.
 
-The difference between them is that `setup` is executed everytime before a test and `setup_all` is executed just one time before the `module` tests.
+The difference between them is that `setup` is executed every time before a test and `setup_all` is executed just one time before the `module` tests.
 
 {% highlight elixir %}
   setup do
