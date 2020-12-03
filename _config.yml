@@ -6,7 +6,7 @@ plugins:
 # Site settings
 title: "Amanda Sposito"
 description: > # this means to ignore newlines until "email:"
-   Software Engineer at Plataformatec.
+   Software Engineer at Bleacher Report.
 email: "hello@amandasposito.com"
 
 #blog logo
