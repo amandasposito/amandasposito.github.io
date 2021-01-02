@@ -8,14 +8,12 @@ categories:
   - performance
 ---
 
-One of these days I was trying to solve a problem at work, and I stumbled across this (not so new) join type.
+Since [PostgreSQL 9.3](https://www.postgresql.org/docs/9.3/release-9-3.html) we have a new [LATERAL](https://www.postgresql.org/docs/current/queries-table-expressions.html#QUERIES-LATERAL) option for FROM-clause subqueries and function calls.
 
 ![](/assets/images/postgres-lateral-join/k8-H1o9rL0XBx0-unsplash.jpg)
 Photo by [K8](https://unsplash.com/@k8_iv?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
 
 ### What it is?
-
-Since [PostgreSQL 9.3](https://www.postgresql.org/docs/9.3/release-9-3.html) we have a new LATERAL option for FROM-clause subqueries and function calls.
 
 According to the documentation what it does is:
 
@@ -23,11 +21,11 @@ According to the documentation what it does is:
 
 Basically, what it does is that for each row in the main select, it evaluates the sub-select using the main select row as a parameter. Quite similar to a [for loop](https://www.postgresql.org/docs/current/plpgsql-control-structures.html) that iterates through the rows returned by a SQL query.
 
-### The example: TOP N results
+### TOP N results
 
-The problem I needed to solve was to fetch the most recent items of each tag in a list. It doesn't seem that complex, and it's quite a common problem, so let's think about an example to help us.
+Let's think about an example. We need to fetch the most recent items of each tag in a list.
 
-I have a table `tags` and a table `movies`, with a one-to-many relationship. To make things easier, a movie can only have one tag. I want to fetch the most recent videos of each tag. How would you do it?
+Imagine that we have a table `tags` and a table `movies`, with a one-to-many relationship. To make things easier, a movie can only have one tag. I want to fetch the most recent videos of each tag. How would you do it?
 
 Let's create our tables and populate them with some data, to help us visualize.
 
@@ -72,7 +70,7 @@ INSERT INTO "movies"("name", "tag_id", "created_at") VALUES('The Midnight Sky', 
 
 One way that we can achieve the desired result is to use the `row_number()` [window function](https://www.postgresql.org/docs/current/functions-window.html) combined with an [WITH query (common table expressions)](https://www.postgresql.org/docs/current/queries-with.html).
 
-It will number the rows according to the partition config we specify in the `over` clause, so when we fetch the entries we can limit the number of movies from each tag. Let's see how it works.
+It will number the rows according to the partition config we specify in the `over` clause, so at the time we fetch the entries we can limit the number of movies from each tag. Let's see how it works.
 
 ```sql
 SELECT
@@ -95,7 +93,7 @@ FROM movies;
 | 3 | Arrival | 2016-10-24 00:00:00 | 2 |
 | 3 | Minority Report | 2002-08-02 00:00:00 | 3 |
 
-We can see that the results are numbered within the tag_id, and from newer to older. Now we can use it with a CTE and include a condition to only fetch the top 2 of each tag.
+We can see that the results are numbered within the tag_id from newer to older. Now we can use it with a CTE and include a condition to only fetch the top 2 of each tag.
 
 ```sql
 with movies_by_tags (tag_id, name, created_at, rank) as (
@@ -138,7 +136,7 @@ JOIN LATERAL (
 ;
 ```
 
-What's happening is that because of the `lateral` keyword, we are able to reference the `tags` table in the sub-select, and fetch only the movies from that tag, already limiting the results on that step. Without it, we wouldn't be able to run that query.
+What’s happening is that because of the lateral keyword, we can reference the tags table in the sub-select, and fetch only the movies from that tag, already limiting the results on that step. Without it, we wouldn’t be able to run that query.
 
 ```sql
 # SELECT *
@@ -221,9 +219,9 @@ Planning Time: 0.161 ms
 Execution Time: 0.068 ms
 ```
 
-We can see that solutions have similar results, with a few milliseconds of difference between them, but its clear that the `LATERAL` join performed better.
+We can see that solutions have similar results, with a few milliseconds of difference between them, and we can also see that the `LATERAL` join performed better.
 
-What happens when we populate the database with a few millions of entries? Let's try.
+What happens when we populate the database with a few more of entries? Let's try.
 
 ```sql
 -- Generates 3_000_000 movies
@@ -269,15 +267,15 @@ Planning Time: 0.127 ms
 Execution Time: 8595.917 ms
 ```
 
-Taking a closer look into the output, we can see that the `WindowAgg` and the `Subquery Scan` on the CTE table are the two most expensive actions in the query. Let's break it down.
+Let's break it down.
 
-First we do a `sequential scan` on the movies table. It scans through every page of data sequentially, reads the data, applies the filter (if exists) and then discard the rows that don't fit. This kind of scan **always** reads everything in the table. Unless we need a large portion of the table, this is generally inefficient.
+Taking a closer look into the output, we can see that the `WindowAgg` and the `Subquery Scan` on the CTE are the two most expensive actions in the query.
 
-Then we apply the `sort`, and we see that we are using the `external merge`. It is used when the data does not fit in memory, and we use the disk. This is probably the slowest sort method since there is a lot of going to the disk sorting and then putting it back. As a side note, we could change the `work_mem` settings to increase the memory for postgres, but there is only a certain point that we can reach.
+First we do a `sequential scan` on the movies table. This means that we scan through every page of data sequentially, read the data, apply the filter (if exists) and then discard the rows that don't fit. This kind of scan **always** reads everything in the table. Unless we need a large portion of the table, this is generally inefficient.
+
+Then we apply the `sort`, and we see that we are using the `external merge` instead of the `quicksort` from the first `explain analyze`. This happens when the data does not fit in memory, and we use the disk to process it. This is probably the slowest sort method since there is a lot of back and forth to the disk.
 
 After all that, we read from the CTE and apply our filter (mbt.rank < 3) that removes 3_000_003 rows.
-
-That's **a lot** of work.
 
 ##### Using the lateral join
 
@@ -294,19 +292,20 @@ Planning Time: 0.165 ms
 Execution Time: 928.809 ms
 ```
 
-Let's break it down this output.
+Let's break it down.
 
-Starting form the bottom, we can see that we are doing a `index scan` using the index that we created when we created the tables. This means that we can read only some of the rows in a table, and since we want a small set of rows, postgres can directly ask the index.
+Starting form the bottom, we can see that we are doing a `index scan` using the index that we created when we created the tables. This means that we can read only some of the rows in a table, and since we want a small set of rows, postgres can directly ask the index. This is faster than the seq scan.
 
 Then we apply the `sort`, and we see that we are using the `top-N heapsort` in this case. This sort is used when you only want a couple of sorted rows. Which fits perfectly for our case of fetching the 2 most recent movies.
 
-After that we limit and perform the join.
-
+After that, we limit and perform the join using a nested loop (where the right relation is scanned once for every row found in the left relation), and then return.
 
 ### Conclusion
 
 We can see from the output that the execution time using the `row_number` was around **8.5s**, and the `lateral` was around **0.9s**.
 
-There is probably a few things we could do to optimize both the `row_number` solution and the `lateral` one. But we can also see that in general, for this TOP-N case, the `lateral join` fits better.
+The `row_number` solution has to do a lot more work, reading through all the table rows and remove a lot of rows, so it can return the desired output. This is visible by its execution time. While the `lateral` join solution is able to make use of indexes and a better sort method.
+
+There is probably a few things we could do to optimize both the `row_number` solution and the `lateral` one. But we in general, for this TOP-N case, the `lateral join` is a better fit.
 
 I hope that helps!
