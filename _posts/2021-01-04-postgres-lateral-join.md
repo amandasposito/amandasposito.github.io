@@ -13,7 +13,7 @@ Since [PostgreSQL 9.3](https://www.postgresql.org/docs/9.3/release-9-3.html) we 
 ![](/assets/images/postgres-lateral-join/k8-H1o9rL0XBx0-unsplash.jpg)
 Photo by [K8](https://unsplash.com/@k8_iv?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
 
-### What it is?
+### What is it?
 
 According to the documentation what it does is:
 
