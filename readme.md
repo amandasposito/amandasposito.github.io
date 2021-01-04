@@ -10,4 +10,4 @@ $ bundle install
 $ bundle exec jekyll serve --watch
 ```
 
-**Copyright 2016-2021 Amanda Sposito. All rights reserved. http://amandasposito.com**
+**Copyright 2015-2021 Amanda Sposito. All rights reserved. http://amandasposito.com**
