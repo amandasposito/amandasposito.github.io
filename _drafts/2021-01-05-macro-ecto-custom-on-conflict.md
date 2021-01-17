@@ -3,15 +3,21 @@ layout: post
 title:  "Ecto custom on_conflict using metaprogramming"
 author: "Amanda Sposito"
 date:   2021-01-05 9:30:00 -0300
+image: /assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg
 categories:
   - elixir
   - ecto
   - macro
 ---
 
-Metaprogramming is one of these things that, unless you are working on a lib, you shouldn't be using too much on your day to day job. As the [Elixir Guide](https://elixir-lang.org/getting-started/meta/macros.html) says:
+Metaprogramming is one of these things that, unless you are working on a lib, you shouldn't be using too much on your day to day job.
+
+As the [Elixir Guide](https://elixir-lang.org/getting-started/meta/macros.html) says:
 
 > Elixir already provides mechanisms to write your everyday code in a simple and readable fashion by using its data structures and functions. Macros should only be used as a last resort. Remember that explicit is better than implicit. Clear code is better than concise code.
+
+![](/assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg)
+Photo by [Melanie Karrer](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
 
 But, you know, every once in a while you will find a problem that could be solved using metaprogramming, so even though we shouldn't be using this in everywhere, it's important to know how it works, to know where to use it.
 
