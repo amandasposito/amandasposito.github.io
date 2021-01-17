@@ -3,6 +3,7 @@ layout: post
 title:  "Postgres' lateral join, have you heard about it?"
 author: "Amanda Sposito"
 date:   2021-01-04 09:30:00 -0300
+image: /assets/images/postgres-lateral-join/k8-H1o9rL0XBx0-unsplash.jpg
 categories:
   - PostgreSQL
   - performance
