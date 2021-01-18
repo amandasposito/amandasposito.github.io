@@ -12,24 +12,24 @@ categories:
 
 Metaprogramming is one of these things that, unless you are working on a lib, you shouldn't be using too much on your day to day job.
 
+![](/assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg)
+Photo by [Melanie Karrer](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
+
 As the [Elixir Guide](https://elixir-lang.org/getting-started/meta/macros.html) says:
 
 > Elixir already provides mechanisms to write your everyday code in a simple and readable fashion by using its data structures and functions. Macros should only be used as a last resort. Remember that explicit is better than implicit. Clear code is better than concise code.
 
-![](/assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg)
-Photo by [Melanie Karrer](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
-
-But, you know, every once in a while you will find a problem that could be solved using metaprogramming, so even though we shouldn't be using this in everywhere, it's important to know how it works, to know where to use it.
+But, you know, every once in a while, you will find a problem that could be solved using metaprogramming, so even though we shouldn't be using this in all the places, it's important to know how it works, to know where to use it.
 
 ### The problem
 
-One of these days a friend came to talk to me with an Ecto problem that could be solved using metaprogramming. He was using the [insert_all/3](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3) function with the `on_conflict` option so it would become a [upsert command](https://hexdocs.pm/ecto/constraints-and-upserts.html#upserts).
+One of these days, a friend came to talk to me about an Ecto problem that could be solved using metaprogramming. He was using the [insert_all/3](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3) function with the `on_conflict` option so it would become a [upsert command](https://hexdocs.pm/ecto/constraints-and-upserts.html#upserts).
 
-The problem is that we need to update only the entries that are newer than the actual timestamp. For that, we need a custom query to check the timestamp, and when we use a custom query we lose the ability to use the `:replace_all` option to replace the all the fields. According to the [doc](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3):
+The problem is that we need to update only the entries that are newer than the actual timestamp. We need a custom query to check the timestamp, and when we use a custom query, we lose the ability to use the `:replace_all` option to replace all the fields. According to the [doc](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3):
 
 > `:on_conflict` - It may be one of `:raise` (the default), `:nothing`, `:replace_all`, `{:replace_all_except, fields}`, `{:replace, fields}`, a keyword list of update instructions or an `Ecto.Query` query for updates.
 
-If we want to replace all the fields and still use the Ecto.Query, we will need to update all the fields manually, and this is error prone.
+If we want to replace all the fields and still use the `Ecto.Query`, we will need to update all the fields manually, and this is error-prone.
 
 ```elixir
 def update_user(users) do
@@ -69,13 +69,9 @@ You can skip to the final solution [here](#extending-ectos-on_conflict) if you w
 
 ### Metaprogramming to the rescue
 
-A quick intro to metaprogramming.
-
 #### Where do I start?
 
-(!) Elixir is a [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) based programming language. Meaning that when our code is compiled, their source is transformed into a tree structure before being turned into bytecode or machine code.
-
-Elixir AST structure is exposed in a form that can be represented in its own data structure.
+Elixir is a [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) based programming language. Meaning that when our code is compiled, its source is transformed into a tree structure. Elixir AST structure is exposed in a form that can be represented in its own data structure.
 
 Metaprogramming is the ability to write code using code, so we can extend the language to dynamically change the code, and we do it by manipulating Elixir's AST.
 
@@ -98,7 +94,7 @@ In this example, the tuple represents a function call to the Kernel [arithmetic 
 
 ### The unquote
 
-The [unquote](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote/1) macro is responsible for injecting an AST expression into the AST. On the "Metaprogramming Elixir" book, Chris McCord says:
+The [unquote](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote/1) macro is responsible for injecting an AST expression into the AST. In the "Metaprogramming Elixir" book, Chris McCord says:
 
 > You can think of quote/unquote as string interpolation for code. If you were building up a string and needed to inject the value of a variable into that string, you would interpolate it. The same goes when constructing an AST. We use quote to begin generating an AST and unquote to inject values from an outside context. This allows the outside bound variables, expression and block, to be injected directly into our if ! transformation.
 
@@ -174,9 +170,9 @@ User
 )
 ```
 
-We need to write a macro that will take a list of fields, and build a fragment passing the field's name.
+We need to write a macro that will take a list of fields and build a fragment passing the field's name.
 
-For every schema that we create on Ecto, we will have a [__schema__](https://hexdocs.pm/ecto/Ecto.Schema.html#module-reflection) function that can be used for runtime instrospection of the schema. We will use it to fetch all non-virtual fields from the schema.
+For every schema that we create on Ecto, we will have a [__schema__](https://hexdocs.pm/ecto/Ecto.Schema.html#module-reflection) function that can be used for runtime introspection of the schema. We will use it to fetch all non-virtual fields from the schema.
 
 ```elixir
 User.__schema__(:fields)
@@ -192,7 +188,7 @@ Now that we have a list of all the fields we want to update, we will use `quote`
 end)
 ```
 
-After that we will pass the values we build for the `set` operator. Instead of `unquote` this time we will use [`unquote_splicing`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote_splicing/1) because we are passing a list of expressions, instead of one expression.
+After that, we will pass the values we build for the `set` operator. Instead of `unquote` this time, we will use [`unquote_splicing`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote_splicing/1) because we are passing a list of expressions, instead of one expression.
 
 ```elixir
 defmacro custom_on_conflict_update_replace_all(queryable) do
@@ -248,7 +244,7 @@ end
 
 ```
 
-Now, everytime we make a change on the `User` schema we don't need to bother come back and change this function.
+Now, every time we make a change on the `User` schema we don't need to bother to come back and change this function.
 
 I hope it helps!
 
