@@ -10,20 +10,10 @@ categories:
   - macro
 ---
 
-Metaprogramming is one of these things that, unless you are working on a lib, you shouldn't be using too much on your day to day job.
+One of these days, a friend came to talk to me about an Ecto problem that could be solved using metaprogramming. He was using the [insert_all/3](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3) function with the `on_conflict` option so it would become a [upsert command](https://hexdocs.pm/ecto/constraints-and-upserts.html#upserts).
 
 ![](/assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg)
 Photo by [Melanie Karrer](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
-
-As the [Elixir Guide](https://elixir-lang.org/getting-started/meta/macros.html) says:
-
-> Elixir already provides mechanisms to write your everyday code in a simple and readable fashion by using its data structures and functions. Macros should only be used as a last resort. Remember that explicit is better than implicit. Clear code is better than concise code.
-
-But, you know, every once in a while, you will find a problem that could be solved using metaprogramming, so even though we shouldn't be using this in all the places, it's important to know how it works, to know where to use it.
-
-### The problem
-
-One of these days, a friend came to talk to me about an Ecto problem that could be solved using metaprogramming. He was using the [insert_all/3](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3) function with the `on_conflict` option so it would become a [upsert command](https://hexdocs.pm/ecto/constraints-and-upserts.html#upserts).
 
 The problem is that we need to update only the entries that are newer than the actual timestamp. We need a custom query to check the timestamp, and when we use a custom query, we lose the ability to use the `:replace_all` option to replace all the fields. According to the [doc](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3):
 
@@ -71,7 +61,7 @@ You can skip to the final solution [here](#extending-ectos-on_conflict) if you w
 
 #### Where do I start?
 
-Elixir is a [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) based programming language. Meaning that when our code is compiled, its source is transformed into a tree structure. Elixir AST structure is exposed in a form that can be represented in its own data structure.
+Elixir is a [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) based programming language. Meaning that when our code is compiled, its source is transformed into a tree structure, this structure is exposed in a form that can be represented in Elixir's own data structure.
 
 Metaprogramming is the ability to write code using code, so we can extend the language to dynamically change the code, and we do it by manipulating Elixir's AST.
 
@@ -159,7 +149,7 @@ iex> MyModule.increment(1)
 
 ### Extending Ecto's on_conflict
 
-The [update/3](https://hexdocs.pm/ecto/Ecto.Query.html#update/3) function expects a `set` operator with a [keyword list](https://hexdocs.pm/elixir/Keyword.html) with field-value pairs as values.
+Back to our problem, the [update/3](https://hexdocs.pm/ecto/Ecto.Query.html#update/3) function expects a `set` operator with a [keyword list](https://hexdocs.pm/elixir/Keyword.html) with field-value pairs as values.
 
 ```elixir
 User
@@ -188,7 +178,7 @@ Now that we have a list of all the fields we want to update, we will use `quote`
 end)
 ```
 
-After that, we will pass the values we build for the `set` operator. Instead of `unquote` this time, we will use [`unquote_splicing`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote_splicing/1) because we are passing a list of expressions, instead of one expression.
+After that, we will pass the values we built for the `set` operator. Instead of `unquote` this time, we will use [`unquote_splicing`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote_splicing/1) because we are passing a list of expressions, instead of one expression.
 
 ```elixir
 defmacro custom_on_conflict_update_replace_all(queryable) do
