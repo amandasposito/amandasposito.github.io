@@ -1,9 +1,8 @@
 ---
 layout: post
-title:  "Ecto custom on_conflict using metaprogramming"
+title:  "Extending Ecto's on_conflict using metaprogramming"
 author: "Amanda Sposito"
 date:   2021-01-05 9:30:00 -0300
-image: /assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg
 categories:
   - elixir
   - ecto
@@ -15,7 +14,7 @@ One of these days, a friend came to talk to me about an Ecto problem that could 
 ![](/assets/images/extending-ectos-on-conflict/melanie-karrer-T1jw85v_2SE-unsplash.jpg)
 Photo by [Melanie Karrer](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@fotokarussellmelanie?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText)
 
-The problem is that we need to update only the entries that are newer than the actual timestamp. We need a custom query to check the timestamp, and when we use a custom query, we lose the ability to use the `:replace_all` option to replace all the fields. According to the [doc](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3):
+The problem is that it was necessary to update only the entries that were newer than the current one. To do that, we need a custom query to check the timestamp, but when we use a custom query, we lose the ability to use the `:replace_all` option to replace all the fields. According to the [doc](https://hexdocs.pm/ecto/Ecto.Repo.html#c:insert_all/3):
 
 > `:on_conflict` - It may be one of `:raise` (the default), `:nothing`, `:replace_all`, `{:replace_all_except, fields}`, `{:replace, fields}`, a keyword list of update instructions or an `Ecto.Query` query for updates.
 
@@ -135,7 +134,7 @@ iex> Macro.to_string(quote(do: unquote(number) + 1))
 
 ### Macros
 
-According to the documentation [Macros](https://hexdocs.pm/elixir/Macro.html#content) are compile-time constructs that are invoked with Elixir's AST as input and a superset of Elixir's AST as output. The response will then be injected back into the application.
+According to the documentation [Macros](https://hexdocs.pm/elixir/Macro.html#content) are compile-time constructs that are invoked with Elixir's AST as input and a superset of Elixir's AST as output. Once the construct finishes its processing, the response will then be injected back into the application.
 
 ```
 defmodule MyModule do
