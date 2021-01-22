@@ -2,7 +2,7 @@
 layout: post
 title:  "Extending Ecto's on_conflict using metaprogramming"
 author: "Amanda Sposito"
-date:   2021-01-05 9:30:00 -0300
+date:   2021-01-22 20:25:00 -0300
 categories:
   - elixir
   - ecto
