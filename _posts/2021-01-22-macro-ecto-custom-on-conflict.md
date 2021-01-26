@@ -173,7 +173,7 @@ Now that we have a list of all the fields we want to update, we will use `quote`
 :fields
 |> User.__schema__()
 |> Enum.map(fn f ->
-  {f, quote(do: fragment(unquote("EXCLUDED.#{to_string(f)}")))}
+  {f, quote(do: fragment(unquote("EXCLUDED.#{f}")))}
 end)
 ```
 
@@ -185,7 +185,7 @@ defmacro custom_on_conflict_update_replace_all(queryable) do
     :fields
     |> User.__schema__()
     |> Enum.map(fn f ->
-      {f, quote(do: fragment(unquote("EXCLUDED.#{to_string(f)}")))}
+      {f, quote(do: fragment(unquote("EXCLUDED.#{f}")))}
     end)
 
   quote(do: Ecto.Query.update(unquote(queryable), [u], set: [unquote_splicing(values)]))
@@ -219,7 +219,7 @@ defmacro custom_on_conflict_update_replace_all(queryable) do
     :fields
     |> User.__schema__()
     |> Enum.map(fn f ->
-      {f, quote(do: fragment(unquote("EXCLUDED.#{to_string(f)}")))}
+      {f, quote(do: fragment(unquote("EXCLUDED.#{f}")))}
     end)
 
   quote(do: Ecto.Query.update(unquote(queryable), [u], set: [unquote_splicing(values)]))
