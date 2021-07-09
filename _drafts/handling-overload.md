@@ -8,21 +8,19 @@ categories:
   - performance
 ---
 
-If you are lucky enough your application will evolve from an MVP with low traffic to a system that needs to handle multiple requests. There's a big difference between maintaining those two types of applications.
-
 When our application starts to handle more traffic things start to break. An application designed to handle [5.000 requests a day](https://blog.twitter.com/official/en_us/a/2010/measuring-tweets.html), it's not the same that can handle [500 million requests a day](https://blog.twitter.com/official/en_us/a/2014/the-2014-yearontwitter.html). Most of us should remember [Twitter's Fail Whale](https://thenextweb.com/twitter/2013/11/25/rip-fail-whale/) and the struggle to keep pace with its users and the sheer volume of tweets.
 
-So, what should we do?
+In a scenario like that, what should we do?
 
 ### Observability
 
 As our software evolves and the traffic grows, chances are that we will need to improve performance of different parts of the system. To do that, we need to understand **what** the application is doing and explain **why** it behaves the way it does.
 
-To achieve that we have three main pillars: Logs, Metrics and Traces.
+To achieve that we have three main pillars that can help us: Logs, Metrics and Traces.
 
 ##### Logs
 
-This is normaly the easiest way to start, almost all languages alredy have a built-in logger that you can use. It logs events that happened in your application, it's useful for debugging when something happens.
+This is normaly the easiest way to start, almost all languages alredy have a built-in logger that you can use. It logs events that happened in your application, and it's useful for debugging when something happens.
 
 ##### Metrics
 
@@ -60,7 +58,7 @@ Sometimes we need to put safeguards in place, ensuring users do not overflow the
 
 "In queueing theory, the long-term average number L of customers in a stationary system is equal to the long-term average effective arrival rate λ multiplied by the average time W that a customer spends in the system." - [Wikipedia](https://en.wikipedia.org/wiki/Little%27s_law)
 
-What it means is that the queue length (L), is equal to the arrival rate (λ), mutiplied by the response time (W), and the formula is represented like `L = λW`.
+What it means is that the queue length (L), is equal to the arrival rate (λ), mutiplied by the response time (W), and the formula is represented like <br /> `L = λW`.
 
 A different way to think about it is that a queue is made by the number of items inside the system (working in progress), the arrival rate being the number of requests made to the system, and the response time being the mean time a item takes to leave the system.
 
@@ -72,7 +70,7 @@ Have you heard the term *overload* before? It means that your system is having a
 
 Most of the time we cannot control the arrival rate in the system, sometimes it could be constant such as a black friday event, or it could happen through spikes of requests such as breaking news.
 
-What we can control is the number of WIP items in the system by applying backpressure or load shedding, and also the throughput, by removing bottlenecks from the request-processing path whenever possible;
+What we can control is the number of WIP items in the system by applying backpressure, we can also try to optimize the throughput, by removing bottlenecks from the request-processing path whenever possible.
 
 If we don't pay attention to those two our systems can become unresponsive, overflowed with requests it can’t handle, degrading in performance or crashing all together. This is not good for you or your users.
 
@@ -82,16 +80,16 @@ How do we protect our systems then?
 
 Little's Law can help us identify what's the queue length desired to keep our system's health in good shape. To determine the number of requests the system can service we can use the WIP formula (*WIP = Throughput * Response time*). Meaning that any request that exceeds the number of working in progress items allowed cannot be immediately serviced and must be queued or rejected.
 
-Let's think of two examples to ilustrate this in real life.
+Let's think of one example to ilustrate this in real life.
 
 #### Cartola FC
 
-Here in Brazil, we have an app, named Cartola FC, to play football fantasy game, where people can put together their teams and it's based on the Brazilian National Football league. After every match you will earn points based on how the players in your team are performing.
+Here in Brazil, we have an app, named Cartola FC, to play football fantasy game. People can put together their teams and it's based on the Brazilian National Football league. After every match you will earn points based on how the players in your team are performing.
 
-The app has 12 million users, 5.8 million active users, 2 billions of app opening. 238k requests per second.
+The app has 5.8 million active users, 2 billions of app opening, and 238k requests per second.
 The traffic pattern is spiky, because people that have popular players on their teams, when this player scores a goal, all of them wants to check the points at the same time, and sometimes it has 1 million simultaneous accesses.
 
-To prevent degradaded responses, after a certain threshhold, they implemented a message saying "full stadium", so the system don't get overflowed with requests it can answer. What happens is that normally after a refresh those who were waiting now will be able to see the partial results.
+To prevent degradaded responses, after a certain threshhold, they implemented a message saying "full stadium", so the system don't get overflowed with requests it can answer. They did this because normally after a refresh those who were waiting now will be able to see the partial results, because people were only interested on checking it's points, but they don't stay for long.
 
 Thinking about Little's Law, the arrival rate is sky high, but the audience doesn't stick around for too long during the games, by showing the message to the ones under the service threshold you assure that your users will get the response and the ones that aren't able yet, will probably get a response next time they refresh the page.
 
@@ -111,7 +109,9 @@ It's necessary to define what matters to you and what matters to your domain. Al
 
 To handle overload we need to identify first where to apply backpressure. It's important to not overengineer the system that does not need load regulation. Use your system observability to decide where the optimizations should be.
 
-How many simultaneous requests can go through the system before latency becomes too high or your app runs out of memory? Put safeguards in place, ensuring users do not overflow the system with requests it can’t handle. Know how your system will fail, rather than let it explode, and plan degraded responses that make sense to your business domain.
+Ask yourself: how many simultaneous requests can go through the system before latency becomes too high or the app runs out of memory?
+
+Put safeguards in place, ensuring users do not overflow the system with requests it can’t handle. Know how your system will fail, rather than let it explode, and plan degraded responses that make sense to your business domain.
 
 I hope it helps!
 
