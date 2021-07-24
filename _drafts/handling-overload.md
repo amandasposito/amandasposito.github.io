@@ -8,45 +8,51 @@ categories:
   - performance
 ---
 
-When our application starts to handle more traffic things start to break. An application designed to handle [5.000 requests a day](https://blog.twitter.com/official/en_us/a/2010/measuring-tweets.html), it's not the same that can handle [500 million requests a day](https://blog.twitter.com/official/en_us/a/2014/the-2014-yearontwitter.html). Most of us should remember [Twitter's Fail Whale](https://thenextweb.com/twitter/2013/11/25/rip-fail-whale/) and the struggle to keep pace with its users and the sheer volume of tweets.
+At some point, when we are supporting our application in production, performance problems may happen.
 
-In a scenario like that, what should we do?
+Most of the times when our application starts to handle more traffic things start to break. An application designed to handle [5.000 requests a day](https://blog.twitter.com/official/en_us/a/2010/measuring-tweets.html), it's not the same that can handle [500 million requests a day](https://blog.twitter.com/official/en_us/a/2014/the-2014-yearontwitter.html). Most of us should remember [Twitter's Fail Whale](https://thenextweb.com/twitter/2013/11/25/rip-fail-whale/) and the struggle to keep pace with its users and the sheer volume of tweets.
+
+When we are facing something like that, what should we do?
 
 ### Observability
 
-As our software evolves and the traffic grows, chances are that we will need to improve performance of different parts of the system. To do that, we need to understand **what** the application is doing and explain **why** it behaves the way it does.
+As our software evolves and the traffic grows, chances are that we will need to improve performance of different parts of the system. To do that, first we need to understand **what** the application is doing and explain **why** it behaves the way it does.
 
-To achieve that we have three main pillars that can help us: Logs, Metrics and Traces.
+Observability is a term that states that your system needs to be observable and that you should have the ability to measure its internal state by analyzing its outputs, and to achieve that we have three main pillars: Logs, Metrics and Traces.
 
 ##### Logs
 
-This is normaly the easiest way to start, almost all languages alredy have a built-in logger that you can use. It logs events that happened in your application, and it's useful for debugging when something happens.
+Logs are normally the easiest way to start, almost all languages already have a built-in logger that you can use. The idea is to log events that happened in your application. This is very useful for debugging when something unexpected happens.
 
 ##### Metrics
 
-In Elixir we have a lib called [Telemetry](https://github.com/beam-telemetry/telemetry) that unifies and standarizes the way we collect metrics.
+A metric is a number captured at runtime that represents something in your system in a given timestamp.
 
-It's important to define what matters to us on the operational side such as CPU usage, memory, database query times, cache hits and misses; and also what matters to the application domain, such as requests by second, users in real-time, etc. With that in hand we can start to measure our code.
+Each application it's different so it's important to define what matters to us both on the operational side, and to the application domain, so we can start collecting metrics such as CPU usage, memory consumption, database query times, cache hits, cache misses, requests by second, users in real-time, etc.
+
+All of this give us context to better understand what's happening in our application, and how the code behaves, instead of guessing how it should behave.
 
 ##### Traces
 
-It's a series of events that tracks the progression of a single request. Each unit of work in a trace is called a span, and a trace is a tree of spans. A span provides Request, Error and Duration metrics that can be used to debug availability as well as performance issues, as it gives us more visibility of what's happening in our system.
+Traces are a series of events that tracks the progression of a single request. Each unit of work in a trace is called a span, and a trace is a tree of spans. Fancy, isn't it? You might as well think of them as queues inside queues.
 
-This can help us a lot, as it gives everyone the ability to understand and fix what's wrong in the system.
+![DataDog Tracing](/assets/images/breaking-production/datadog-traces.png)
+
+It give us the ability to put into context what's happening in our system. A trace represents the entire journey of a request as it moves through all the pieces of our applications. This can help us a lot, as it gives everyone the ability to understand and fix what's wrong in the system.
 
 ##### Using it all together
 
-Now that we know the three pillars of observability, we can start monitoring our metrics and how the changes we do in our application impact the performance.
+Now that we talked about the three pillars of observability, we can start monitoring our metrics and how the changes we do in our application impact the performance.
 
 To operationalize those metrics by creating alerts based on what matters to us, and to monitor the variability of these metrics is what allows us to react to a not-so-good deployment, to a new feature that needs to be improved, or to a system degradation that could happen over time.
 
 ### Planning for overload
 
-Performance is a feature, and there are type of systems that won't need to worry with scalability at all. But given that we are dealing with an application that needs scalability, and that we already have our metrics and the visibility of what's happening in the application. Where do we start?
+Performance is a feature, and there are type of systems that won't need to worry with scalability at all. But given that we are dealing with an application that needs it, and that we already have our metrics and the visibility of what's happening in the application. Where do we start?
 
 ![Calvin and Hobes, from Bill Waterson](/assets/images/breaking-production/calvin-and-hobbes-bridges-load-limit.jpg)
 
-One way to guarantee that your system can withstand the load it was designed to handle, and, with time, scale to manage increased demand, it's to simulate high loads. But keep in mind that even if you can simulate high traffic in your tests, sometimes, this will not be even closer to the production patterns. If that's the case, load test is still useful to the system but there are other options that could help us identify the system behavior in production, such as [chaos engineering](https://en.wikipedia.org/wiki/Chaos_engineering) and [feature flags](https://en.wikipedia.org/wiki/Feature_toggle).
+One way to guarantee that your system can withstand the load it was designed to handle, and, with time, scale to manage the increased demand, it's to simulate high loads. But keep in mind that even if you can simulate high traffic in your tests, sometimes, this will not be even closer to the production patterns. If that's the case, load test is still useful to the system but there are other options that could help us identify the system behavior in production, such as [chaos engineering](https://en.wikipedia.org/wiki/Chaos_engineering) and [feature flags](https://en.wikipedia.org/wiki/Feature_toggle).
 
 We need to measure the system throughput and latency. The first represents the number of items processed per unit of time and the former represents the time between making a request to when you see a result.
 
@@ -119,10 +125,8 @@ I hope it helps!
 
 **Related Links**
 
-* [https://samuelmullen.com/articles/the-hows-whats-and-whys-of-elixir-telemetry/](https://samuelmullen.com/articles/the-hows-whats-and-whys-of-elixir-telemetry/)
-* [https://docs.honeycomb.io/learning-about-observability/events-metrics-logs/](https://docs.honeycomb.io/learning-about-observability/events-metrics-logs/)
 * [https://opentelemetry.io/docs/concepts/data-sources/](https://opentelemetry.io/docs/concepts/data-sources/)
 * [https://netflixtechblog.medium.com/performance-under-load-3e6fa9a60581](https://netflixtechblog.medium.com/performance-under-load-3e6fa9a60581)
-* pt-BR [https://hipsters.tech/tecnologia-no-cartola-fc-hipsters-ponto-tech-232/](https://hipsters.tech/tecnologia-no-cartola-fc-hipsters-ponto-tech-232/)
-* [https://keathley.io/blog/regulator.html](https://keathley.io/blog/regulator.html)
+* [https://hipsters.tech/tecnologia-no-cartola-fc-hipsters-ponto-tech-232)](https://hipsters.tech/tecnologia-no-cartola-fc-hipsters-ponto-tech-232/) `(pt-BR)`
 * [Designing for Scalability with Erlang/OTP: Implement Robust, Fault-Tolerant Systems](https://www.amazon.com/Designing-Scalability-Erlang-OTP-Fault-Tolerant-ebook-dp-B01FRIM8OK/dp/B01FRIM8OK/ref=mt_other?_encoding=UTF8&me=&qid=)
+* [https://keathley.io/blog/regulator.html](https://keathley.io/blog/regulator.html)
