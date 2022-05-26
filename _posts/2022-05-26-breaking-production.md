@@ -2,6 +2,7 @@
 layout: post
 title:  "A look into Performance and Scalability"
 author: "Amanda Sposito"
+thumbnail: /assets/images/breaking-production/queue.jpg
 categories:
   - elixir
   - littles-law
