@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Breaking Production - Handling overload in the real world"
+title:  "A look into Performance and Scalability"
 author: "Amanda Sposito"
 categories:
   - elixir
@@ -115,7 +115,7 @@ By knowing how your system works, you can start planning for how it will behave 
 
 It's necessary to define what matters to you and what matters to your domain. Always keep an eye on the metrics that are important, to know how the changes we implement in the code affect the performance. Those metrics together and the ability to create alerts that matter based on those metrics, it's what allows us to react to a bad deployment, a feature that needs improvement, or system degradation.
 
-To handle overload we need to identify first where to apply backpressure. It's important to not overengineer the system that does not need load regulation. Use your system observability to decide where the optimizations should be.
+To handle overload we need to identify first where to apply backpressure. **It's important to not overengineer the system that does not need load regulation. Use your system observability to decide where the optimizations should be.**
 
 Ask yourself: how many simultaneous requests can go through the system before latency becomes too high or the app runs out of memory?
 
