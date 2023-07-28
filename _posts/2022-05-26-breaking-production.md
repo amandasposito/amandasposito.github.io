@@ -67,9 +67,9 @@ Sometimes we need to put safeguards in place, ensuring users do not overflow the
 
 What it means is that the queue length (L), is equal to the arrival rate (λ), multiplied by the response time (W), and the formula is represented like <br /> `L = λW`.
 
-A different way to think about it is that a queue is made by the number of items inside the system (working in progress), the arrival rate being the number of requests made to the system, and the response time being the mean time an item takes to leave the system.
+A different way to think about it is that a queue is made by the number of items inside the system (work in progress), the arrival rate being the number of requests made to the system, and the response time being the mean time an item takes to leave the system.
 
-We can tweak this formula to calculate the number of items inside the system (Working In Progress) `WIP = Throughput * Response time`, the response time `Response Time = WIP / Throughput`, or the system throughput `Throughput = WIP / Response time`.
+We can tweak this formula to calculate the number of items inside the system (Work In Progress) `WIP = Throughput * Response time`, the response time `Response Time = WIP / Throughput`, or the system throughput `Throughput = WIP / Response time`.
 
 ##### But why does it matter?
 
@@ -89,7 +89,7 @@ How do we protect our systems then?
 
 ### Load regulation
 
-Little's Law can help us identify what's the queue length desired to keep our system's health in good shape. To determine the number of requests the system can service we can use the WIP formula (*WIP = Throughput * Response time*). Meaning that any request that exceeds the number of working in progress items allowed cannot be immediately serviced and must be queued or rejected.
+Little's Law can help us identify what's the queue length desired to keep our system's health in good shape. To determine the number of requests the system can service we can use the WIP formula (*WIP = Throughput * Response time*). Meaning that any request that exceeds the number of work in progress items allowed cannot be immediately serviced and must be queued or rejected.
 
 Let's think of one example to illustrate this in real life.
 
