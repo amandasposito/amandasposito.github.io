@@ -10,4 +10,4 @@ $ bundle install
 $ bundle exec jekyll server --watch --drafts
 ```
 
-**Copyright 2015-2021 Amanda Sposito. All rights reserved. http://amandasposito.com**
+**Copyright 2015-2025 Amanda Sposito. All rights reserved. http://amandasposito.com**
